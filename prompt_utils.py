@@ -64,7 +64,8 @@ def _build_prompt(
 
 # 停用词清理
 def remove_stop_words(token_ids,stop_words_ids):
-    token_ids=copy.deepcopy(token_ids)
+    token_ids = copy.deepcopy(token_ids)
+    token_ids = list(token_ids)
     while len(token_ids)>0:
         if token_ids[-1] in stop_words_ids:
             token_ids.pop(-1)
