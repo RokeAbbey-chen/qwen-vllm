@@ -1,4 +1,5 @@
 import os 
+from functools import reduce
 from vllm import AsyncEngineArgs,AsyncLLMEngine
 from vllm.sampling_params import SamplingParams
 from modelscope import AutoTokenizer, GenerationConfig,snapshot_download
@@ -82,8 +83,11 @@ async def chat(request: Request):
         # return Response(status_code=502,content='query is empty')
         # query
     else:
+        history = [[{'role': 'user', 'content':history[i][0]}, {'role': 'assistant', 'content': history[i][1]}] for i in range(len(history))]
+        history = reduce(lambda x,y: x + y, history, [])
         messages = [
             {'role': 'system', 'content': system},
+            *history,
             {'role': 'user', 'content': query},
         ]
         # prompt_text, prompt_tokens=_build_prompt(generation_config,tokenizer,query,history=history,system=system)
